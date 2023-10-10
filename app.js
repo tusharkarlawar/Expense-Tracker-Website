@@ -34,7 +34,7 @@ const app=express();
 //     path.join(__dirname,'access.log'),{
 //     flags:'a' //open a file and append the all data
 // });
-
+app.use(express.static('public'));
 app.use(cors());
 app.use(express.json());
 app.use(helmet());

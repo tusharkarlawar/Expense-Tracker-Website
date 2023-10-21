@@ -16,5 +16,4 @@
 //   }
   
 //   testConnection();
-
 // module.exports=sequelize;

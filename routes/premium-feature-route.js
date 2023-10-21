@@ -13,6 +13,4 @@ routes.get("/leaderboard",userAuthentication.authenticate, premiumFeature.leader
 routes.get("/download",userAuthentication.authenticate, premiumFeature.downloadExpense);
 
 
-
-
-module.exports = routes;//
+module.exports = routes;

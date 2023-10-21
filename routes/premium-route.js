@@ -11,6 +11,4 @@ routes.get("/premium-membership", userAuthentication.authenticate, premium.premi
 //update Transactions
 routes.post("/update-transaction-status", userAuthentication.authenticate, premium.updateStatus);
 
-
-
 module.exports = routes;//

@@ -7,59 +7,53 @@ require('dotenv').config();
 exports.addUser = async(req,res,next)=>{
     try{
         const {name, email, password} = req.body;
-       
+        const user = await User.findOne({email:email});
+        if(user){
+            return res.status(409).json({messege:'User already exist'})
+        }
         const saltrounds = 10
-        bcrypt.hash(password, saltrounds, async(error, hash)=>{
-            const data = await User.create({
-                name:name,
-                email:email,
-                password:hash,
-            })
-            res.json({newUser: data, msg:"User created", success: true});
-        });
+        const hash = await bcrypt.hash(password, saltrounds);
+        const data = await User.create({
+            name:name,
+            email:email,
+            password:hash,
+        })
+        res.json({newUser: data, msg:"User created", success: true});
     }
     catch (err) {
-        res.status(403).json({
-          error: err,
-        });
-      }
+        console.log('user while signup',err);
+        res.status(500).json({ meseege: 'Internal server error'});
+    }
 };
         
             
                     
 
-function generateAccessToken(id, isPremium){
-    return jwt.sign({userId: id, isPremium: isPremium}, process.env.SECRET_KEY) //generate token//stateless
+function generateAccessToken(user){
+    return jwt.sign({userId: user.id, name: user.name, isPremium: user.isPremium}, process.env.SECRET_KEY) //generate token//stateless
 }
 
 exports.userLogin = async(req,res,next)=>{
     try{
         const { email, password} = req.body;
-        const login = await User.find({email:email})
-        console.log(login[0]);
-        if(login.length>0){
-            bcrypt.compare(password, login[0].password, async(err, result)=>{
-                if(err){
-                    return(res.json({msg:"dcrypting error",
-                    success:false}))
-                }
-                if(result===true){
-                    return(
-                        res.json({msg:"Password is correct",
-                    success:true, token: generateAccessToken(login[0].id, login[0].isPremium)}
-                    ))
-                }else{
-                    return(res.json({msg:"Password is incorrect",
-                    success:false}))
-                }
-            })
+        const user = await User.findOne({email:email})
+        //console.log(login[0]);
+        if(!user){
+            return res.status(404).json("User doesnt exist");
         }
-        else{
-                return(res.json("User doesnt exist"));
-            }
-            
-    }
-    catch(error){
-        res.json({Error: error});
+
+        const result = await bcrypt.compare(password, user.password);
+
+        if(result){
+            return(
+                res.json({msg:"Password is correct",
+            success:true, token: generateAccessToken(user)}
+            ))
+        }
+        res.status(401).json({msg:"Password is incorrect",success:false})
+                
+    }catch(error){
+        console.log("error while userLogin",error);
+        res.status(500).json({messege: "Internal server error"});
     }
 }

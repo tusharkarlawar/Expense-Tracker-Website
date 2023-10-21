@@ -18,9 +18,9 @@ const expenseSchema = new Schema({
         required: true,
     },
     userId: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+        type: Schema.Types.ObjectId,  
+        ref: "User",                  //exp is associated with the "User" model using the ref property. 
+        required: true, //It ensures that every "Expense" document must have a valid and non-null user ID reference.
     }
 });
 

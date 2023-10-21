@@ -22,9 +22,11 @@ button.addEventListener("click", async(e)=>{
             window.location.href="./login.html";
         }else{
             console.log("User already exists");
+            
         }
 
     }catch(err){
         console.log(err);
+        alert(err.response.data.messege);
     }
 })

@@ -4,9 +4,9 @@ const User = require('../models/user');
 const authenticate = async(req, res, next)=>{
     try{
         const token = req.header('Authorization');
-        console.log(token);
+        // console.log(token);
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
-        console.log("User ID>>>>>>>>>>>>>>>>>", decoded.userId);
+        // console.log("User ID>>>>>>>>>>>>>>>>>", decoded.userId);
         const user = await User.findById(decoded.userId)
             req.user = user;  //return user deatails
             

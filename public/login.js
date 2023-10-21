@@ -15,7 +15,6 @@ button.addEventListener("click", async(e)=>{
         
         if(userLogin.data.success===true){
 
-            //localStorage.setItem('isPremium', userLogin.data.isPremium)
             localStorage.setItem('token', userLogin.data.token);
             
             console.log("User data is available in DB");

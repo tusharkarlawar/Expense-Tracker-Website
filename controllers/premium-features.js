@@ -8,22 +8,23 @@ const AWS = require("aws-sdk");
 
 exports.leaderboardDetails = async(req,res,next)=>{
     try{
-        const leaderBoardOfUsers = await User.find().sort({ totalExpenses: -1 });
+        const leaderBoardOfUsers = await User.find().sort({ totalExpense: -1 });
         res.json(leaderBoardOfUsers);
-    }catch(err){
-        console.log(err);
+    }catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "An error occurred while fetching the leaderboard." });
     }
 }
 
 //download user expense
 exports.downloadExpense = async(req,res,next)=>{
     try{
-        const expenses = await Expense.find();
+        const userId = req.user._id;
+        const expenses = await Expense.find({userId:userId});
         //here expenses is an array and we cannot write an array into the file.
         //console.log(expenses);
         //so we convert it to string using strigify.
         const stringifiedExpenses = JSON.stringify(expenses);
-        const userId = req.user._id;
 
         const fileName = `Expenses${userId}/${new Date()}.txt`;
         const fileUrl = await uploadToS3(stringifiedExpenses, fileName);

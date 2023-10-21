@@ -1,34 +1,23 @@
-const expense = require("../models/expense");
 const User = require("../models/user"); 
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken'); 
 const Forgotpassword = require("../models/forgotpassword");
 const uuid = require("uuid");
 const Sib = require("sib-api-v3-sdk");
-// require('dotenv').config();
 const dotenv = require('dotenv');
 dotenv.config();
 exports.forgotpassword = async (req, res) => {
     try {
         const { email } =  req.body;
-        // console.log(email);
         const user = await User.findOne( {email: email});
-        // console.log(User);
         if(user){
             const id = uuid.v4();
-            // console.log(id);
             const result = await Forgotpassword.create({ userId: user._id, active: true });
-            // console.log("result:",result); 
 
         const client=Sib.ApiClient.instance
             
         const apiKey=client.authentications['api-key']
-        // apiKey.apiKey=process.env.SENDINBLUE_API_KEY
         apiKey.apiKey=process.env.SENDINBLUE_API_KEY;
 
-       // console.log("apiKey.apiKey",process.env.SENDINBLUE_API_KEY); 
-        
-        
         const transEmailApi=new Sib.TransactionalEmailsApi();
         const sender={
             email:"tusharkarlawar95@gmail.com"
@@ -36,7 +25,6 @@ exports.forgotpassword = async (req, res) => {
     
         const receivers=[{ email:email}]
         
-        //console.log("emailll",email); 
         const data= await transEmailApi.sendTransacEmail({
             sender,
             to:receivers,
@@ -45,7 +33,6 @@ exports.forgotpassword = async (req, res) => {
             htmlContent:`<a href="http://localhost:3000/resetpassword/${result._id}">Reset password</a>`
             
         })
-        //console.log("dataa:",data);
         res.json({msg:"Mail sent successfully", success:true});
         }else{
             res.json({msg:"User doesnt exist", success:false});
@@ -81,7 +68,6 @@ exports.resetpassword = async(req, res) => {
 
     }
     }catch(err){
-        // console.log(err);
     }
 
 }
@@ -100,7 +86,6 @@ exports.updatepassword = async(req, res) => {
                         bcrypt.hash(newpassword, 5, async(err, hash)=>{
                             // Store hash in your password DB.
                             if(err){
-                                // console.log(err);
                                 throw new Error(err);
                             }
                             await user.updateOne({ password: hash })

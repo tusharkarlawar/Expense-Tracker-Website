@@ -94,6 +94,22 @@ async function showDownloadButton(){
     }
 }
 
+function showBrowser(show){
+
+    console.log(show,'get_id');
+    const pagesize=document.getElementById("pagesize")
+        pagesize.addEventListener("click",()=>{
+            localStorage.setItem("pageSize",pagesize.value)
+            //window.location.reload()
+           })
+
+    console.log(showBrowser);
+    var childNode=`<li id=${show._id} style="margin-bottom:10px;">${show.description}-${show.amount}-${show.category}
+             <button onclick="deleteExpense('${show._id}')" style="float:right; margin-left:5px;">Delete</button>
+                     </li>`
+                     parentNode.innerHTML=parentNode.innerHTML+childNode;
+    
+}
 
 
 //fetch all the expensedata  using get service
@@ -180,21 +196,7 @@ async function pagination(){
 
 }
 
-function showBrowser(show){
 
-    const pagesize=document.getElementById("pagesize")
-        pagesize.addEventListener("click",()=>{
-            localStorage.setItem("pageSize",pagesize.value)
-            //window.location.reload()
-           })
-
-    console.log(showBrowser);
-    var childNode=`<li id=${show._id} style="margin-bottom:10px;">${show.description}-${show.amount}-${show.category}
-             <button onclick="deleteExpense('${show._id}')" style="float:right; margin-left:5px;">Delete</button>
-                     </li>`
-                     parentNode.innerHTML=parentNode.innerHTML+childNode;
-
-}
 
 //delete the expense
 
